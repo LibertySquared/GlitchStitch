@@ -4,6 +4,10 @@ GlitchStich is a native Windows video review and editing prototype. It uses a fa
 
 ## Public testing and feedback
 
+Download the Windows x64 testing ZIP from [GitHub Releases](https://github.com/LibertySquared/GlitchStitch/releases). Extract the entire ZIP to a writable folder and run **GlitchStich.exe**. The release ZIP includes the .NET runtime; keep its files together and read `START-HERE.txt` for detector/Ollama setup. GitHub's source-code ZIPs are not runnable app packages.
+
+To create a clean, self-contained download from committed source, run `powershell -ExecutionPolicy Bypass -File tools/Package-WindowsRelease.ps1`. It excludes local user data, verifies the extracted ZIP, and writes the ZIP and SHA-256 checksum under `release-assets`. This does not replace your local installed app. The developer publishing workflow below creates a smaller framework-dependent package instead.
+
 This repository contains the current app source, artwork, notification/intro audio, setup scripts, and regression checks. It is an early testing build: review suggested glitches and draft stitches before applying or exporting them. Detector accuracy and AI suggestions vary by recording. Approved preferences personalize suggestions; they do not retrain pretrained model weights.
 
 Requirements: Windows x64, the .NET 9 Desktop Runtime to run a published build, and the .NET 9 SDK to build one. Setup downloads the playback runtime and optional detector dependencies/models. Glitchy requires a running local Ollama service with a suitable installed model; a fresh checkout does not include the developer's installed models. YouTube is optional and requires your own Google desktop OAuth setup.

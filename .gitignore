@@ -5,6 +5,8 @@
 release/
 .reelgood-publish-staging/
 portable-release/
+.release-work/
+release-assets/
 
 # FFmpeg binaries are distributable locally but too large for source history.
 # Keep the GPL license and build notes tracked.
