@@ -1,14 +1,78 @@
 # Visual Studio / .NET build output
 **/bin/
 **/obj/
+/checks/results/
 release/
+.reelgood-publish-staging/
+portable-release/
 
 # FFmpeg binaries are distributable locally but too large for source history.
 # Keep the GPL license and build notes tracked.
 tools/*.exe
+Resources/Flyleaf/FFmpeg/*.dll
+.build-profile/flyleaf-runtime-staging/
+
+# Locally downloaded ML runtime, weights, and scan smoke-check files.
+Resources/LaughDetection/site-packages/
+Resources/LaughDetection/.python/
+Resources/LaughDetection/Models/*.h5
+Resources/LaughDetection/audioset/*.ckpt
+Resources/LaughDetection/audioset/*.npz
+Resources/LaughDetection/freinds_laugh.wav
+Resources/LaughDetection/smoke-*.json
+Resources/LaughDetection/python-*-embed-amd64.zip
+__pycache__/
+*.py[cod]
 
 dotnet-home/
+.dotnet-home/
+.laugh-env/
 .appdata/
+.build-profile/
 .nuget/
 *.user
 *.suo
+
+# WPF temporary build projects and local application state.
+*_wpftmp.csproj
+**/ReelGoodData/
+**/GlitchStichData/
+*.glitchstich
+*.glitchstich.bak
+*.reelgood
+*.reelgood.bak
+*.log
+
+# Private recordings, extracted audio, exports and local training examples.
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.wmv
+*.webm
+*.m4v
+*.wav
+*.mp3
+*.ogg
+*.flac
+!Resources/Audio/Intro.wav
+!Resources/Audio/DraftReady.wav
+
+# Downloaded model weights and account credentials are never source inputs.
+*.onnx
+*.safetensors
+*.gguf
+*.ckpt
+*.h5
+*.npz
+.env
+.env.*
+!.env.example
+client_secret*.json
+client_secrets*.json
+credentials.json
+token.json
+tokens.json
+*.pfx
+*.p12
+*.key

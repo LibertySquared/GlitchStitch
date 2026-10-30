@@ -1,0 +1,7 @@
+Draft-ready notification: classic Samsung Whistle notification sound.
+Source page: https://quicksounds.com/sound/27307/samsung-whistle-notification-sound
+Downloaded asset: https://quicksounds.com/uploads/tracks/1774169963_1526558651_52507641.mp3
+Retrieved for the user's requested notification on 2026-10-30.
+Converted to 48 kHz mono PCM WAV using bundled FFmpeg; no synthesized substitute.
+The source identifies it as the classic Samsung whistle; its exact original release year is not verified.
+Source attribution records provenance; it does not assert ownership or a new license.

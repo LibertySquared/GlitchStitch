@@ -1,0 +1,10 @@
+ReelGood's source-monitor playback uses FlyleafLib 3.11.8 and the Flyleaf FFmpeg 9.0 Windows shared runtime.
+
+FlyleafLib is licensed under LGPL-3.0-or-later. Source and license:
+https://github.com/SuRGeoNix/Flyleaf
+
+The shared FFmpeg runtime is distributed in the official Flyleaf v3.11.8 release and is configured as a minimal Windows build without GPL encoders. FFmpeg licensing and source information:
+https://ffmpeg.org/legal.html
+https://github.com/SuRGeoNix/Flyleaf/releases/tag/v3.11.8
+
+The .NET wrapper uses Direct3D libraries distributed by their respective NuGet authors. Refer to the package metadata and licenses for the exact transitive package versions used by a build.

@@ -1,0 +1,18 @@
+<Window x:Class="ReelGood.SplashWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ReelGood" Title="GlitchStich" Width="1500" Height="960" MinWidth="1120" MinHeight="760" WindowStartupLocation="Manual" WindowStyle="None" ResizeMode="NoResize" Background="#03060D" ShowInTaskbar="False" FontFamily="Consolas" Foreground="#DFEFF2">
+ <Window.Resources>
+  <Storyboard x:Key="Intro">
+   <DoubleAnimation Storyboard.TargetProperty="SceneTime" From="0" To="6.2" Duration="0:0:6.2"/>
+   <DoubleAnimation Storyboard.TargetName="SplashFrame" Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="0:0:5.95" Duration="0:0:0.25"/>
+  </Storyboard>
+ </Window.Resources>
+ <Grid x:Name="SplashFrame" Margin="6" local:CyberShape.Cut="24" ClipToBounds="True" Background="#03060D">
+  <Viewport3D x:Name="Stage" ClipToBounds="True" IsHitTestVisible="False"/>
+  <Grid IsHitTestVisible="False" Margin="34,28">
+   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+   <Grid><StackPanel><TextBlock Text="GLITCHSTICH // STUDIO IDENT" FontSize="14" Foreground="#53EDFF" FontWeight="Bold"/><TextBlock Text="INDEPENDENT SIGNAL / NO RULES. JUST GOOD STITCHES." FontSize="10" Foreground="#698898" Margin="0,7,0,0"/></StackPanel><TextBlock Text="GS—01  /  NEURAL CINEMA" HorizontalAlignment="Right" Foreground="#F077D9" FontSize="10"/></Grid>
+   <Border Grid.Row="1" BorderBrush="#243E51" BorderThickness="1,0" Margin="0,24"/>
+   <Grid Grid.Row="2"><StackPanel><TextBlock x:Name="SequenceLabel" Text="COPILOT // ENTERING THE GRID" FontSize="12" Foreground="#53EDFF"/><TextBlock Text="GLITCHES IN. STITCHES OUT." FontSize="10" Foreground="#9CAEBB" Margin="0,7,0,0"/></StackPanel><TextBlock Text="YOUR SIGNAL. YOUR RULES." FontSize="10" Foreground="#F077D9" HorizontalAlignment="Right" VerticalAlignment="Bottom"/></Grid>
+  </Grid>
+ </Grid>
+</Window>
+

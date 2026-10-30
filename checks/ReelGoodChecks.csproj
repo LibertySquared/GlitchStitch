@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0-windows</TargetFramework><UseWPF>true</UseWPF><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../ExportOptions.cs" Link="ExportOptions.cs" />
+    <Compile Include="../AudioDuplicateDetector.cs" Link="AudioDuplicateDetector.cs" />
+    <Compile Include="../ExportPlan.cs" Link="ExportPlan.cs" />
+    <Compile Include="../ProjectFileStore.cs" Link="ProjectFileStore.cs" />
+    <Compile Include="../RecordingMux.cs" Link="RecordingMux.cs" />
+    <Compile Include="../AudioTrackPolicy.cs" Link="AudioTrackPolicy.cs" />
+    <Compile Include="../CopilotProposal.cs" Link="CopilotProposal.cs" />
+    <Compile Include="../CopilotFootageReview.cs" Link="CopilotFootageReview.cs" />
+    <Compile Include="../DraftEditPlan.cs" Link="DraftEditPlan.cs" />
+    <Compile Include="../EditorialPolicy.cs" Link="EditorialPolicy.cs" />
+    <Compile Include="../QuietAudioDetector.cs" Link="QuietAudioDetector.cs" />
+    <Compile Include="../PlaybackShutdown.cs" Link="PlaybackShutdown.cs" />
+    <Compile Include="../EditingModel.cs" Link="EditingModel.cs" />
+    <Compile Include="../MediaRenderPlan.cs" Link="MediaRenderPlan.cs" />
+    <Compile Include="../YouTubeConnection.cs" Link="YouTubeConnection.cs" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.77.0.4309" />
+  </ItemGroup>
+</Project>

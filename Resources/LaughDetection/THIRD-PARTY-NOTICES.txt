@@ -1,0 +1,13 @@
+YAMNet audio event classifier
+Source and model information: https://github.com/tensorflow/models/tree/master/research/audioset/yamnet
+The pretrained classifier recognizes 521 AudioSet sound classes and is downloaded from TensorFlow Hub (https://tfhub.dev/google/yamnet/1) during first-run setup.
+Model assets are provided under the terms listed by the upstream TensorFlow Model Garden and AudioSet project. See the upstream model documentation for attribution and usage terms.
+
+TensorFlow Hub
+Source: https://github.com/tensorflow/hub
+Licensed under Apache License 2.0.
+
+CLIP ViT-B/32 visual model
+The quantized ONNX export is downloaded from https://huggingface.co/onnx-community/clip-vit-base-patch32-ONNX at first video scan. The source model is OpenAI CLIP ViT-B/32. Downloaded ONNX SHA-256: 06e11583385faecfa7273f7cc72b603be915ab9340269482cde69a5d0f5e3350. See the repository model card and OpenAI CLIP license/model terms for attribution and use conditions.
+Model repository: https://huggingface.co/onnx-community/clip-vit-base-patch32-ONNX
+Source model: https://huggingface.co/openai/clip-vit-base-patch32

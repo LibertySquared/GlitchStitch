@@ -1,0 +1,16 @@
+Google APIs .NET client libraries (Google.Apis.YouTube.v3, Google.Apis, Google.Apis.Auth, Google.Apis.Core)
+Copyright Google LLC. Apache License 2.0; see Google-Apache-LICENSE.txt.
+Source: https://github.com/google/google-api-dotnet-client
+
+Newtonsoft.Json
+Copyright James Newton-King. MIT License; see Newtonsoft-MIT-LICENSE.txt.
+Source: https://github.com/JamesNK/Newtonsoft.Json
+
+System.Management / System.CodeDom dependencies
+Copyright .NET Foundation and Contributors. MIT License.
+Source and license: https://github.com/dotnet/runtime/blob/main/LICENSE.TXT
+
+YouTube API authorization:
+https://developers.google.com/youtube/data/guides/auth/installed-apps
+Resumable uploads:
+https://developers.google.com/youtube/data/guides/using_resumable_upload_protocol
