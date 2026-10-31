@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record CopilotProposal(string? Prompt, int? BookmarkId, double? Start, double? End, string? Decision, double? EventTime = null)
 {

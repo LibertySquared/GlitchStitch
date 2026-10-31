@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using FlyleafLib;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 /// <summary>
 /// Interaction logic for App.xaml
@@ -19,6 +19,12 @@ public partial class App : Application
 
     private async void Application_Startup(object sender, StartupEventArgs e)
     {
+        if (e.Args.Length == 1 && e.Args[0] == "--migrate-data")
+        {
+            try { AppPaths.EnsureDataDirectory(AppContext.BaseDirectory); Shutdown(0); }
+            catch (Exception ex) { Console.Error.WriteLine(ex); Shutdown(2); }
+            return;
+        }
         if (e.Args.Length == 1 && e.Args[0] == "--verify-package")
         {
             // A non-interactive package check also verifies the renamed native
@@ -29,12 +35,12 @@ public partial class App : Application
                 if (assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyProductAttribute), false)
                     .OfType<System.Reflection.AssemblyProductAttribute>().Single().Product != "GlitchStich")
                     throw new InvalidDataException("The package has the wrong product identity.");
-                foreach (var resource in new[] { "ReelGood.tools.ffmpeg.exe", "ReelGood.Audio.Intro.wav" })
+                foreach (var resource in new[] { "GlitchStich.tools.ffmpeg.exe", "GlitchStich.Audio.Intro.wav" })
                     using (var embedded = assembly.GetManifestResourceStream(resource) ?? throw new FileNotFoundException(resource))
                         if (embedded.Length == 0) throw new InvalidDataException(resource);
-                foreach (var asset in new[] { "Resources/reelgood.ico", "Resources/Brand/reelgood-app.png", "Resources/Brand/copilot-camera.png" })
+                foreach (var asset in new[] { "Resources/glitchstich.ico", "Resources/Brand/glitchstich-app.png", "Resources/Brand/copilot-camera.png" })
                 {
-                    var decoded = System.Windows.Media.Imaging.BitmapDecoder.Create(new Uri("pack://application:,,,/ReelGood;component/" + asset), System.Windows.Media.Imaging.BitmapCreateOptions.None, System.Windows.Media.Imaging.BitmapCacheOption.OnLoad);
+                    var decoded = System.Windows.Media.Imaging.BitmapDecoder.Create(new Uri("pack://application:,,,/GlitchStich;component/" + asset), System.Windows.Media.Imaging.BitmapCreateOptions.None, System.Windows.Media.Imaging.BitmapCacheOption.OnLoad);
                     if (decoded.Frames[0].PixelWidth == 0) throw new InvalidDataException(asset);
                 }
                 foreach (var library in new[] { "avcodec-63.dll", "avformat-63.dll", "avutil-61.dll" })
@@ -107,8 +113,7 @@ public partial class App : Application
     {
         try
         {
-            var directory = Path.Combine(AppContext.BaseDirectory, "ReelGoodData");
-            Directory.CreateDirectory(directory);
+            var directory = AppPaths.EnsureDataDirectory(AppContext.BaseDirectory);
             File.AppendAllText(Path.Combine(directory, "startup.log"), $"{DateTimeOffset.Now:O} {exception}\n");
         }
         catch { }

@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using Microsoft.Win32;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow
 {

@@ -11,7 +11,7 @@ using Google.Apis.Util.Store;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record YouTubeSettings(bool AutoUpload = false, string Privacy = "private", string Description = "", string Tags = "", bool MadeForKids = false, string Channel = "");
 internal sealed record YouTubeDesktopClient(string Id, string Secret);
@@ -19,6 +19,7 @@ internal sealed record YouTubeDesktopClient(string Id, string Secret);
 internal sealed class ProtectedYouTubeStore(string folder) : IDataStore
 {
     private string FileFor<T>(string key) => Path.Combine(folder, Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(typeof(T).FullName + ":" + key))) + ".bin");
+    private string LegacyFileFor<T>(string key) => Path.Combine(folder, Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(typeof(T).FullName!.Replace("GlitchStich.", "ReelGood.", StringComparison.Ordinal) + ":" + key))) + ".bin");
     public Task StoreAsync<T>(string key, T value)
     {
         Directory.CreateDirectory(folder); var clear = JsonSerializer.SerializeToUtf8Bytes(value);
@@ -28,12 +29,14 @@ internal sealed class ProtectedYouTubeStore(string folder) : IDataStore
     }
     public Task<T> GetAsync<T>(string key)
     {
-        var path = FileFor<T>(key); if (!File.Exists(path)) return Task.FromResult(default(T)!);
+        var path = FileFor<T>(key);
+        if (!File.Exists(path)) path = LegacyFileFor<T>(key);
+        if (!File.Exists(path)) return Task.FromResult(default(T)!);
         var clear = ProtectedData.Unprotect(Convert.FromBase64String(File.ReadAllText(path)), null, DataProtectionScope.CurrentUser);
         try { return Task.FromResult(JsonSerializer.Deserialize<T>(clear)!); }
         finally { CryptographicOperations.ZeroMemory(clear); }
     }
-    public Task DeleteAsync<T>(string key) { var path = FileFor<T>(key); foreach (var file in new[] { path, path + ".bak" }) if (File.Exists(file)) File.Delete(file); return Task.CompletedTask; }
+    public Task DeleteAsync<T>(string key) { foreach (var path in new[] { FileFor<T>(key), LegacyFileFor<T>(key) }.Distinct()) foreach (var file in new[] { path, path + ".bak" }) if (File.Exists(file)) File.Delete(file); return Task.CompletedTask; }
     public Task ClearAsync()
     {
         if (Directory.Exists(folder)) foreach (var file in Directory.EnumerateFiles(folder, "*.bin*")) File.Delete(file);

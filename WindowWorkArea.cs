@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class WindowWorkArea
 {

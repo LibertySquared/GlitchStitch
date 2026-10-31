@@ -6,15 +6,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <PublishSingleFile>false</PublishSingleFile>
-    <AssemblyName>ReelGood</AssemblyName>
+    <AssemblyName>GlitchStich</AssemblyName>
     <Product>GlitchStich</Product>
     <AssemblyTitle>GlitchStich</AssemblyTitle>
     <Description>GlitchStich automatic video editor — glitches into stitches</Description>
-    <ApplicationIcon>Resources\reelgood.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\glitchstich.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Resource Include="Resources\Brand\*.png;Resources\reelgood.ico" />
-    <Content Include="Resources\reelgood.ico">
+    <Resource Include="Resources\Brand\*.png;Resources\glitchstich.ico" />
+    <Content Include="Resources\glitchstich.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -22,10 +22,10 @@
     <PackageReference Include="FlyleafLib" Version="3.11.8" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.77.0.4309" />
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <EmbeddedResource Include="tools\ffmpeg.exe" LogicalName="ReelGood.tools.ffmpeg.exe" />
-    <EmbeddedResource Include="tools\ffprobe.exe" LogicalName="ReelGood.tools.ffprobe.exe" />
-    <EmbeddedResource Include="Resources\Audio\Intro.wav" LogicalName="ReelGood.Audio.Intro.wav" />
-    <EmbeddedResource Include="Resources\Audio\DraftReady.wav" LogicalName="ReelGood.Audio.DraftReady.wav" />
+    <EmbeddedResource Include="tools\ffmpeg.exe" LogicalName="GlitchStich.tools.ffmpeg.exe" />
+    <EmbeddedResource Include="tools\ffprobe.exe" LogicalName="GlitchStich.tools.ffprobe.exe" />
+    <EmbeddedResource Include="Resources\Audio\Intro.wav" LogicalName="GlitchStich.Audio.Intro.wav" />
+    <EmbeddedResource Include="Resources\Audio\DraftReady.wav" LogicalName="GlitchStich.Audio.DraftReady.wav" />
     <Content Include="Resources\Flyleaf\FFmpeg\*.dll;Resources\Flyleaf\THIRD-PARTY-NOTICES.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

@@ -7,7 +7,7 @@ using FlyleafLib;
 using FlyleafLib.Controls.WPF;
 using FlyleafLib.MediaPlayer;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed class EditedPreviewWindow : Window
 {

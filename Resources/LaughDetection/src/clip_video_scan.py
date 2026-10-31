@@ -91,7 +91,7 @@ def fortnite_examples(directory, cache, ffmpeg, session, input_names, output_nam
             pass
 
     emit(f"EXAMPLES|0|{len(clips)}")
-    temp = tempfile.mkdtemp(prefix="reelgood-fortnite-examples-")
+    temp = tempfile.mkdtemp(prefix="glitchstich-fortnite-examples-")
     frames, labels = [], []
     try:
         def extract_example(entry):
@@ -164,7 +164,7 @@ def main():
     model = Path(args.model)
     if not model.is_file():
         raise FileNotFoundError(f"Visual model is missing: {model}")
-    temp = tempfile.mkdtemp(prefix="reelgood-frames-")
+    temp = tempfile.mkdtemp(prefix="glitchstich-frames-")
     try:
         pattern = os.path.join(temp, "frame_%06d.jpg")
         command = [args.ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-threads", "2", "-i", args.video,

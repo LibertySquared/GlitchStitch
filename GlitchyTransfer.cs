@@ -5,7 +5,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class GlitchyTransfer
 {

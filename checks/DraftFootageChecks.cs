@@ -2,14 +2,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
-using ReelGood;
+using GlitchStich;
 
 internal static class DraftFootageChecks
 {
     public static void Run(string? sourceOverride = null)
     {
         var source = sourceOverride ?? @"D:\Videos\NVIDIAFortnite\Fortnite 2026.10.11 - 12.40.24.06.Double Elimination.DVR.mp4";
-        const string root = @"D:\Editor\ReelGood";
+        const string root = @"D:\Editor\GlitchStich";
         var ffmpeg = Path.Combine(root, "tools", "ffmpeg.exe"); var probe = Path.Combine(root, "tools", "ffprobe.exe");
         string Run(string tool, IEnumerable<string> args)
         {

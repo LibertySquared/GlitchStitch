@@ -19,7 +19,7 @@ using System.Windows.Threading;
 using FlyleafLib;
 using FlyleafLib.MediaPlayer;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow : Window
 {
@@ -52,7 +52,7 @@ public partial class MainWindow : Window
     private CueItem? _selectedCue;
     private VideoEditSegment? _selectedVideoSegment;
     private static string ApplicationDirectory => Path.GetDirectoryName(Environment.ProcessPath ?? Assembly.GetExecutingAssembly().Location) ?? AppContext.BaseDirectory;
-    private readonly string _settingsDirectory = Path.Combine(ApplicationDirectory, "ReelGoodData");
+    private readonly string _settingsDirectory;
     private string LaughModelRoot => Path.Combine(_settingsDirectory, "LaughDetection");
     private string? _videoPath;
     private string? _projectFilePath;
@@ -100,7 +100,7 @@ public partial class MainWindow : Window
 
     internal MainWindow(string? dataDirectory)
     {
-        if (dataDirectory is not null) _settingsDirectory = Path.GetFullPath(dataDirectory);
+        _settingsDirectory = dataDirectory is not null ? Path.GetFullPath(dataDirectory) : AppPaths.EnsureDataDirectory(ApplicationDirectory);
         InitializeComponent();
         WindowWorkArea.Attach(this);
         GlitchyHost.ChatRequested += (_, _) => OpenCopilot_Click(this, new RoutedEventArgs());
@@ -269,15 +269,15 @@ public partial class MainWindow : Window
         }
 
         var targetPath = _projectFilePath;
-        if (string.IsNullOrWhiteSpace(targetPath))
+        if (string.IsNullOrWhiteSpace(targetPath) || !Path.GetExtension(targetPath).Equals(ProjectFileStore.Extension, StringComparison.OrdinalIgnoreCase))
         {
             var dialog = new SaveFileDialog
             {
-                Title = "Save GlitchStich project",
-                FileName = $"{Path.GetFileNameWithoutExtension(_videoPath)}.glitchstich",
-                DefaultExt = ".glitchstich",
+                Title = "Save glitch project",
+                FileName = ProjectFileStore.DefaultProjectName(_videoPath),
+                DefaultExt = ProjectFileStore.Extension,
                 AddExtension = true,
-                Filter = "GlitchStich stitch|*.glitchstich;*.reelgood"
+                Filter = "GlitchStich glitch project|*.glitch"
             };
             if (dialog.ShowDialog(this) != true) return false;
             targetPath = dialog.FileName;
@@ -327,13 +327,13 @@ public partial class MainWindow : Window
     private async void OpenProject_Click(object sender, RoutedEventArgs e)
     {
         if (_busyOperations > 0 || _loadingSource || _captureProcess is not null) return;
-        var dialog = new OpenFileDialog { Title = "Open GlitchStich project", Filter = "GlitchStich stitch|*.glitchstich;*.reelgood", CheckFileExists = true };
+        var dialog = new OpenFileDialog { Title = "Open glitch project", Filter = "Supported glitch projects|*.glitch;*.glitchstich;*.reelgood|GlitchStich glitch project|*.glitch|Legacy project files|*.glitchstich;*.reelgood", CheckFileExists = true };
         if (dialog.ShowDialog(this) != true) return;
 
         ProjectDocument? document;
         try
         {
-            document = JsonSerializer.Deserialize<ProjectDocument>(File.ReadAllText(dialog.FileName));
+            document = JsonSerializer.Deserialize<ProjectDocument>(AppPaths.RemapProjectJson(File.ReadAllText(dialog.FileName), _settingsDirectory));
             if (document is null || document.Version != 1) throw new InvalidDataException("This project file is empty or uses an unsupported version.");
             if (string.IsNullOrWhiteSpace(document.VideoPath) || !File.Exists(document.VideoPath))
                 throw new FileNotFoundException("The source video saved in this project could not be found. Restore it at its original path and open the project again.", document.VideoPath);
@@ -2039,6 +2039,7 @@ public partial class MainWindow : Window
         var sources = _audioTracks.Where(t => !string.IsNullOrWhiteSpace(t.WavPath) && File.Exists(t.WavPath)).Select(t => t.WavPath!).ToArray();
         var same = sources.Length == _stemPlayers.Count && sources.Select((source, i) => _stemPlayers[i].Tag as string == source).All(matches => matches);
         if (same) return;
+        if (_playbackRequested) _previewPlayer.Pause();
         StopStemPlayers();
         foreach (var source in sources)
         {
@@ -2051,15 +2052,22 @@ public partial class MainWindow : Window
                 {
                     _readyStemPlayers.Add(player); player.SpeedRatio = _sourcePlaybackSpeed;
                     player.Position = PreviewPosition; ApplyTrackVolumes();
-                    if (_previewSeekPending || !_playbackRequested) player.Pause();
-                    else player.Play();
+                    player.Pause();
+                    StartPreviewPlayback();
                 }
                 catch { }
             };
+            player.MediaFailed += (_, _) =>
+            {
+                if (_isClosing || !_stemPlayers.Contains(player)) return;
+                PauseDraftPreview(); StatusText.Text = "An extracted audio track could not open. Re-extract it before playing.";
+            };
             player.Source = new Uri(source);
             RootGrid.Children.Add(player); Grid.SetRow(player, 0); Grid.SetColumnSpan(player, 2); _stemPlayers.Add(player);
+            // Open/prime the WAV without playing it, so Play can start all clocks together.
+            player.Pause();
         }
-        ResumeStemPlayback();
+        StartPreviewPlayback();
     }
 
     private void AddCueAtPlayhead_Click(object sender, RoutedEventArgs e)
@@ -2075,7 +2083,7 @@ public partial class MainWindow : Window
         if (_videoPath is null) { StatusText.Text = "Import a video before exporting."; return; }
         if (!await EnsureEngineAsync()) return;
         if (_clipEndSeconds - _clipStartSeconds < .25) { StatusText.Text = "Choose a longer trim range."; return; }
-        var dialog = new SaveFileDialog { Title = "Export trimmed video", FileName = $"{Path.GetFileNameWithoutExtension(_videoPath)}_stitch.mp4", Filter = "MP4 video|*.mp4" };
+        var dialog = new SaveFileDialog { Title = "Export stitch video", FileName = ProjectFileStore.DefaultExportName(_videoPath), Filter = "Stitch video (MP4)|*.mp4" };
         if (dialog.ShowDialog(this) != true) return;
         await ExportEditedVideoAsync(dialog.FileName, [new ExportSegment(_clipStartSeconds, _clipEndSeconds) { Effects = _selectedVideoSegment?.Effects }]);
     }
@@ -2085,7 +2093,7 @@ public partial class MainWindow : Window
         if (_busyOperations > 0 || _captureProcess is not null) return;
         if (_videoPath is null || _videoEditSegments.Count == 0) { StatusText.Text = "Add video glitches before exporting."; return; }
         if (!await EnsureEngineAsync()) return;
-        var dialog = new SaveFileDialog { Title = "Export stitch", FileName = $"{Path.GetFileNameWithoutExtension(_videoPath)}_stitch.mp4", Filter = "MP4 video|*.mp4" };
+        var dialog = new SaveFileDialog { Title = "Export stitch", FileName = ProjectFileStore.DefaultExportName(_videoPath), Filter = "Stitch video (MP4)|*.mp4" };
         if (dialog.ShowDialog(this) != true) return;
         await ExportEditedVideoAsync(dialog.FileName, _videoEditSegments.Select(segment => new ExportSegment(segment.StartSeconds, segment.EndSeconds) { Effects = segment.Effects }).ToArray());
     }
@@ -2281,7 +2289,7 @@ public partial class MainWindow : Window
             var ffmpeg = Path.Combine(installFolder, "ffmpeg.exe");
             var ffprobe = Path.Combine(installFolder, "ffprobe.exe");
             var assembly = Assembly.GetExecutingAssembly();
-            var resources = new[] { (Name: "ReelGood.tools.ffmpeg.exe", Path: ffmpeg), (Name: "ReelGood.tools.ffprobe.exe", Path: ffprobe) };
+            var resources = new[] { (Name: "GlitchStich.tools.ffmpeg.exe", Path: ffmpeg), (Name: "GlitchStich.tools.ffprobe.exe", Path: ffprobe) };
 
             var needsInstall = false;
             foreach (var item in resources)

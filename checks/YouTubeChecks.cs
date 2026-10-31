@@ -6,13 +6,13 @@ using System.Text;
 using System.Text.Json;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Http;
-using ReelGood;
+using GlitchStich;
 
 internal static class YouTubeChecks
 {
     public static async Task Run()
     {
-        const string folder = @"D:\Editor\ReelGood\checks\results\youtube"; Directory.CreateDirectory(folder);
+        const string folder = @"D:\Editor\GlitchStich\checks\results\youtube"; Directory.CreateDirectory(folder);
         var store = new ProtectedYouTubeStore(Path.Combine(folder, "YouTube", "Auth"));
         var state = new MockState(); var connection = new YouTubeConnection(folder, new MockFactory(state));
         const string clientId = "fixture.apps.googleusercontent.com";

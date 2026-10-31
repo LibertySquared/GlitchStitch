@@ -1,7 +1,7 @@
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow
 {
@@ -40,6 +40,12 @@ public partial class MainWindow
     private void StartPreviewPlayback()
     {
         if (_isClosing || _previewSeekPending || !_playbackRequested) return;
+        if (_stemPlayers.Any(player => !_readyStemPlayers.Contains(player)))
+        {
+            StatusText.Text = "Preparing audio tracks for synchronized playback…";
+            return;
+        }
+        if (!_previewPlayer.IsPlaying) SetStemPositions(PreviewPosition);
         _previewPlayer.Play(); ResumeStemPlayback();
     }
 

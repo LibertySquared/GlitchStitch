@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using ReelGood;
+using GlitchStich;
 
 if (args.Length == 1 && args[0] == "--render") { RenderChecks.Run(); return; }
 if (args.Length == 1 && args[0] == "--playback-close") { PlaybackCloseChecks.Run(); return; }
@@ -11,6 +11,7 @@ if (args.Length == 1 && args[0] == "--youtube") { YouTubeChecks.Run().GetAwaiter
 if (args.Length == 1 && args[0] == "--window-close") { WindowCloseChecks.Run(); return; }
 if (args.Length == 1 && args[0] == "--preview-sync") { WindowCloseChecks.Run(sync: true); return; }
 if (args.Length == 1 && args[0] == "--media-live") { WindowCloseChecks.Run(true); return; }
+BrandMigrationChecks.Run();
 DraftPlanChecks.Run();
 EditorialChecks.Run();
 CopilotChecks.Run();
@@ -53,8 +54,8 @@ using (var metadata = JsonDocument.Parse("[{\"tags\":{\"name\":\"All Audio\"}},{
     Console.WriteLine("PASS Medal names and redundant-mix policy; sole mixed audio stays enabled");
 }
 Directory.CreateDirectory(root);
-var ffmpeg = @"D:\Editor\ReelGood\tools\ffmpeg.exe";
-var ffprobe = @"D:\Editor\ReelGood\tools\ffprobe.exe";
+var ffmpeg = @"D:\Editor\GlitchStich\tools\ffmpeg.exe";
+var ffprobe = @"D:\Editor\GlitchStich\tools\ffprobe.exe";
 string Run(string tool, IEnumerable<string> args)
 {
     var info = new ProcessStartInfo(tool) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
@@ -66,7 +67,7 @@ string Run(string tool, IEnumerable<string> args)
     return stdout.Result + stderr.Result;
 }
 void Check(bool okay, string message) { if (!okay) throw new Exception(message); Console.WriteLine("PASS " + message); }
-var save = Path.Combine(root, "atomic.reelgood");
+var save = Path.Combine(root, "atomic.glitchstich");
 ProjectFileStore.Write(save, "{\"version\":1}");
 ProjectFileStore.Write(save, "{\"version\":2}");
 Check(JsonDocument.Parse(File.ReadAllText(save)).RootElement.GetProperty("version").GetInt32() == 2, "Saved project replaced with complete JSON");
@@ -127,16 +128,16 @@ using (var probe = JsonDocument.Parse(Run(ffprobe, ["-v", "error", "-show_stream
 try { ExportPlan.Build(source, source, [new(0, 1)], []); throw new Exception("Source overwrite was allowed"); }
 catch (ArgumentException) { Console.WriteLine("PASS Source video overwrite rejected"); }
 Console.WriteLine("ALL CHECKS PASSED");
-var appFolder = @"D:\Editor\ReelGood\bin\Release\net9.0-windows\win-x64";
-if (!File.Exists(Path.Combine(appFolder, "ReelGood.dll"))) appFolder = @"D:\Editor\ReelGood\.reelgood-publish-staging";
-if (!File.Exists(Path.Combine(appFolder, "ReelGood.dll"))) appFolder = @"D:\Editor\ReelGood\portable-release";
+var appFolder = @"D:\Editor\GlitchStich\bin\Release\net9.0-windows\win-x64";
+if (!File.Exists(Path.Combine(appFolder, "GlitchStich.dll"))) appFolder = @"D:\Editor\GlitchStich\.glitchstich-publish-staging";
+if (!File.Exists(Path.Combine(appFolder, "GlitchStich.dll"))) appFolder = @"D:\Editor\GlitchStich\portable-release";
 System.Runtime.Loader.AssemblyLoadContext.Default.Resolving += (_, name) =>
 {
     var path = Path.Combine(appFolder, name.Name + ".dll");
     return File.Exists(path) ? System.Reflection.Assembly.LoadFrom(path) : null;
 };
-var app = System.Reflection.Assembly.LoadFrom(Path.Combine(appFolder, "ReelGood.dll"));
-var mainType = app.GetType("ReelGood.MainWindow", true)!;
+var app = System.Reflection.Assembly.LoadFrom(Path.Combine(appFolder, "GlitchStich.dll"));
+var mainType = app.GetType("GlitchStich.MainWindow", true)!;
 var runner = System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(mainType);
 mainType.GetField("_ffmpegPath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.SetValue(runner, ffmpeg);
 mainType.GetField("_exportCpuBudget", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.SetValue(runner, 1);
@@ -147,7 +148,7 @@ using (var cancelExport = new CancellationTokenSource(400))
     try { task.GetAwaiter().GetResult(); throw new Exception("Export cancellation did not interrupt the child process"); }
     catch (OperationCanceledException) { Console.WriteLine("PASS Export cancellation stops the active FFmpeg child process"); }
 }
-var documentType = app.GetType("ReelGood.MainWindow+ProjectDocument", true)!;
+var documentType = app.GetType("GlitchStich.MainWindow+ProjectDocument", true)!;
 var oldProject = "{\"Version\":1,\"VideoSegments\":[],\"AudioTracks\":[{\"StreamIndex\":1,\"Label\":\"Mic\",\"Codec\":\"aac\",\"Channels\":1}]}";
 var project = JsonSerializer.Deserialize(oldProject, documentType)!;
 Check(((System.Collections.ICollection)documentType.GetProperty("VideoSegments")!.GetValue(project)!).Count == 0, "Empty timeline survives project deserialization");
@@ -172,7 +173,7 @@ Check((string)documentType.GetProperty("GameMode")!.GetValue(editorialProject)! 
 documentType.GetProperty("MediaLibraryPaths")!.SetValue(project, new List<string> { @"D:\Videos\session.mp4", @"D:\Videos\voice.wav", @"D:\Videos\overlay.png" });
 var libraryProject = JsonSerializer.Deserialize(JsonSerializer.Serialize(project, documentType), documentType)!;
 Check(((List<string>)documentType.GetProperty("MediaLibraryPaths")!.GetValue(libraryProject)!).SequenceEqual(new[] { @"D:\Videos\session.mp4", @"D:\Videos\voice.wav", @"D:\Videos\overlay.png" }), "Project-specific video, audio and PNG library survives save/open round trip");
-using (var sound = app.GetManifestResourceStream("ReelGood.Audio.DraftReady.wav") ?? throw new Exception("Draft-ready sound is not embedded"))
+using (var sound = app.GetManifestResourceStream("GlitchStich.Audio.DraftReady.wav") ?? throw new Exception("Draft-ready sound is not embedded"))
 {
     using var reader = new BinaryReader(sound);
     Check(new string(reader.ReadChars(4)) == "RIFF" && sound.Length > 1000, "Draft-ready notification WAV is embedded in the app");

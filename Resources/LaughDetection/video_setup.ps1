@@ -1,7 +1,7 @@
 param([string]$InstallRoot)
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-if (-not $InstallRoot) { $InstallRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\..\..\portable-release\ReelGoodData\LaughDetection")) }
+if (-not $InstallRoot) { $InstallRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\..\..\portable-release\GlitchStichData\LaughDetection")) }
 $python = Join-Path $InstallRoot "python\python.exe"
 if (-not (Test-Path -LiteralPath $python)) { throw "The local Python runtime is missing. Run the audio scan setup first." }
 $modelDir = Join-Path $InstallRoot "clip-video"
@@ -15,7 +15,7 @@ $env:TMP = $tempRoot
 Write-Output "Preparing the local visual matching runtime..."
 $providerCheck = & $python -c "import importlib,importlib.util; ort=importlib.import_module('onnxruntime') if importlib.util.find_spec('onnxruntime') else None; print('CUDA' if ort and 'CUDAExecutionProvider' in ort.get_available_providers() else 'CPU')"
 if ($LASTEXITCODE -ne 0 -or $providerCheck -notcontains "CUDA") {
-    Write-Output "Installing the NVIDIA CUDA inference runtime on the ReelGood drive..."
+    Write-Output "Installing the NVIDIA CUDA inference runtime on the GlitchStich drive..."
     & $python -m pip uninstall -y onnxruntime onnxruntime-gpu | Out-Null
     & $python -m pip install --disable-pip-version-check --no-warn-script-location "onnxruntime-gpu[cuda,cudnn]==1.22.0" Pillow==11.3.0 tokenizers==0.21.4
     if ($LASTEXITCODE -ne 0) {

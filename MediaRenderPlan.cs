@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.IO;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record ResolvedMedia(TimedMedia Placement, EditingAsset? Asset, double Start, double Duration);
 internal static class MediaRenderPlan

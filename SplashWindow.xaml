@@ -1,4 +1,4 @@
-<Window x:Class="ReelGood.SplashWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:ReelGood" Title="GlitchStich" Width="1500" Height="960" MinWidth="1120" MinHeight="760" WindowStartupLocation="Manual" WindowStyle="None" ResizeMode="NoResize" Background="#03060D" ShowInTaskbar="False" FontFamily="Consolas" Foreground="#DFEFF2">
+<Window x:Class="GlitchStich.SplashWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:GlitchStich" Title="GlitchStich" Width="1500" Height="960" MinWidth="1120" MinHeight="760" WindowStartupLocation="Manual" WindowStyle="None" ResizeMode="NoResize" Background="#03060D" ShowInTaskbar="False" FontFamily="Consolas" Foreground="#DFEFF2">
  <Window.Resources>
   <Storyboard x:Key="Intro">
    <DoubleAnimation Storyboard.TargetProperty="SceneTime" From="0" To="6.2" Duration="0:0:6.2"/>

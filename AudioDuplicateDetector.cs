@@ -2,7 +2,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class AudioDuplicateDetector
 {

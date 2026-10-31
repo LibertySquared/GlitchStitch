@@ -1,5 +1,5 @@
 using System.Text.Json;
-using ReelGood;
+using GlitchStich;
 
 internal static class CopilotChecks
 {

@@ -41,7 +41,7 @@ internal static class PreviewSyncChecks
         await AssertPaused("source import before Play");
         var duration = (double)Field("_durationSeconds")!; Set("_clipEndSeconds", duration);
         var tracks = (System.Collections.IList)Field("_audioTracks")!;
-        var trackType = assembly.GetType("ReelGood.MainWindow+AudioTrack", true)!;
+        var trackType = assembly.GetType("GlitchStich.MainWindow+AudioTrack", true)!;
         for (var index = 0; index < 2; index++)
         {
             var wav = Path.Combine(data, $"independent-track-{index}.wav");
@@ -50,7 +50,7 @@ internal static class PreviewSyncChecks
             trackType.GetProperty("WavPath")!.SetValue(track, wav); tracks.Add(track);
         }
         var clips = (System.Collections.IList)Field("_videoEditSegments")!;
-        clips.Add(Activator.CreateInstance(assembly.GetType("ReelGood.MainWindow+VideoEditSegment", true)!, [0d, duration]));
+        clips.Add(Activator.CreateInstance(assembly.GetType("GlitchStich.MainWindow+VideoEditSegment", true)!, [0d, duration]));
         Call("BuildTimeline");
         await AssertPaused("WAV tracks added before Play");
         Console.WriteLine("PLAYER SeekCompleted: " + playerType.GetEvent("SeekCompleted")!.EventHandlerType);
@@ -78,7 +78,7 @@ internal static class PreviewSyncChecks
         Call("TogglePlayback"); await Task.Delay(250); Call("SeekTo", 3d); Call("TogglePlayback"); await Measure("paused backward seek and resume", 12);
         Call("SetSourcePlaybackSpeed", 2d); await Measure("2x speed", 12);
         Call("SetSourcePlaybackSpeed", .5d); await Measure("0.5x speed", 12);
-        var cueType = assembly.GetType("ReelGood.MainWindow+CueItem", true)!;
+        var cueType = assembly.GetType("GlitchStich.MainWindow+CueItem", true)!;
         var cue = Activator.CreateInstance(cueType, [5d, "Preview sync test", "Manual", 7d, 0d, 0d, 12d])!;
         Call("PlayCue", cue); await AssertPaused("bookmark click during playback");
         Call("TogglePlayback"); await Measure("explicit Play after bookmark selection", 12);
@@ -86,7 +86,7 @@ internal static class PreviewSyncChecks
         await AssertPaused("preview source switch during playback");
         Call("TogglePlayback"); await Measure("explicit Play after preview switch", 8);
         Call("PauseDraftPreview");
-        var preview = (Window)Activator.CreateInstance(assembly.GetType("ReelGood.EditedPreviewWindow", true)!, [editor, source])!;
+        var preview = (Window)Activator.CreateInstance(assembly.GetType("GlitchStich.EditedPreviewWindow", true)!, [editor, source])!;
         var panel = (DockPanel)((Border)preview.Content).Child;
         var host = panel.Children.Cast<FrameworkElement>().Single(element => element.GetType().Name == "FlyleafHost");
         var renderedPlayer = host.GetType().GetProperty("Player")!.GetValue(host)!;

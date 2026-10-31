@@ -13,7 +13,7 @@ internal static class GlitchyChecks
 {
     internal static void Run(Assembly assembly, string output)
     {
-        var type = assembly.GetType("ReelGood.GlitchyCompanion", true)!;
+        var type = assembly.GetType("GlitchStich.GlitchyCompanion", true)!;
         FrameworkElement Create() => (FrameworkElement)Activator.CreateInstance(type)!;
         void Pose(FrameworkElement control, double time) => type.GetMethod("RenderPose", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(control, [time]);
         var source = Create();
@@ -26,7 +26,7 @@ internal static class GlitchyChecks
         var target = Create(); type.GetMethod("SetChatMode")!.Invoke(target, null);
         var owner = new Window { Width = 900, Height = 620, WindowStyle = WindowStyle.None, WindowStartupLocation = WindowStartupLocation.CenterScreen, Opacity = 0, ShowActivated = false, ShowInTaskbar = false, Content = source };
         System.Windows.Shell.WindowChrome.SetWindowChrome(owner, new System.Windows.Shell.WindowChrome { CaptionHeight = 0, ResizeBorderThickness = new Thickness(6), GlassFrameThickness = new Thickness(0) });
-        assembly.GetType("ReelGood.WindowWorkArea", true)!.GetMethod("Attach", BindingFlags.NonPublic | BindingFlags.Static)!.Invoke(null, [owner]);
+        assembly.GetType("GlitchStich.WindowWorkArea", true)!.GetMethod("Attach", BindingFlags.NonPublic | BindingFlags.Static)!.Invoke(null, [owner]);
         var chat = new Window { Width = 780, Height = 580, WindowStartupLocation = WindowStartupLocation.CenterOwner, Opacity = 0, ShowActivated = false, ShowInTaskbar = false, Content = target };
         try
         {
@@ -51,7 +51,7 @@ internal static class GlitchyChecks
             var surface = (FrameworkElement)type.GetProperty("CharacterSurface")!.GetValue(source)!;
             surface.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = UIElement.MouseLeftButtonUpEvent });
             if (clicked != 1) throw new Exception("The character is not the chat launcher");
-            var transfer = assembly.GetType("ReelGood.GlitchyTransfer", true)!.GetMethod("JumpAsync", BindingFlags.Static | BindingFlags.NonPublic)!;
+            var transfer = assembly.GetType("GlitchStich.GlitchyTransfer", true)!.GetMethod("JumpAsync", BindingFlags.Static | BindingFlags.NonPublic)!;
             Pump((Task)transfer.Invoke(null, [source, target, chat, CancellationToken.None])!);
             if (source.Visibility != Visibility.Hidden || target.Visibility != Visibility.Visible) throw new Exception("Glitchy did not transfer into chat");
             if (Application.Current.Windows.Cast<Window>().Any(w => w.GetType().Name == "FlightWindow")) throw new Exception("A flight overlay remains after arrival");

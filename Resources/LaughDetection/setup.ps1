@@ -1,7 +1,7 @@
 param([string]$InstallRoot)
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
-if (-not $InstallRoot) { $InstallRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\..\ReelGoodData\LaughDetection")) }
+if (-not $InstallRoot) { $InstallRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\..\GlitchStichData\LaughDetection")) }
 $pythonDir = Join-Path $InstallRoot "python"
 $sitePackages = Join-Path $pythonDir "Lib\site-packages"
 $assetsDir = Join-Path $InstallRoot "yamnet-cache"

@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 // A single cut-corner silhouette shared by the studio, dialogs, and intro.
 public static class CyberShape

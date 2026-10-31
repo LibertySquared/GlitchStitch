@@ -5,7 +5,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 // An articulated mesh character, not an image plane. A single WPF animation clock
 // drives choreography, projection and camera so seeks/capture remain deterministic.

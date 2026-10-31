@@ -1,4 +1,4 @@
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record DraftBookmark(int Id, double Start, double End, string Label, string? Decision, bool IsWeakCandidate = false, bool IsVerifiedOutcome = false);
 internal sealed record DraftClip(double StartSeconds, double EndSeconds, IReadOnlyList<int> BookmarkIds, string Description)

@@ -1,4 +1,4 @@
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class SplashWindow
 {

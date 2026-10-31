@@ -19,14 +19,14 @@ internal static class RenderChecks
     }
     private static void Render()
     {
-        var root = @"D:\Editor\ReelGood";
+        var root = @"D:\Editor\GlitchStich";
         var folder = Path.Combine(root, "bin", "Release", "net9.0-windows", "win-x64");
-        if (!File.Exists(Path.Combine(folder, "ReelGood.dll"))) folder = Path.Combine(root, ".reelgood-publish-staging");
-        if (!File.Exists(Path.Combine(folder, "ReelGood.dll"))) folder = Path.Combine(root, "portable-release");
+        if (!File.Exists(Path.Combine(folder, "GlitchStich.dll"))) folder = Path.Combine(root, ".glitchstich-publish-staging");
+        if (!File.Exists(Path.Combine(folder, "GlitchStich.dll"))) folder = Path.Combine(root, "portable-release");
         System.Runtime.Loader.AssemblyLoadContext.Default.Resolving += (_, name) => File.Exists(Path.Combine(folder, name.Name + ".dll")) ? Assembly.LoadFrom(Path.Combine(folder, name.Name + ".dll")) : null;
-        var assembly = Assembly.LoadFrom(Path.Combine(folder, "ReelGood.dll"));
+        var assembly = Assembly.LoadFrom(Path.Combine(folder, "GlitchStich.dll"));
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
-        app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText(Path.Combine(root, "CyberTheme.xaml")).Replace("clr-namespace:ReelGood", "clr-namespace:ReelGood;assembly=ReelGood")));
+        app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText(Path.Combine(root, "CyberTheme.xaml")).Replace("clr-namespace:GlitchStich", "clr-namespace:GlitchStich;assembly=GlitchStich")));
         var document = XDocument.Load(Path.Combine(root, "MainWindow.xaml"));
         XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
         XNamespace wpf = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
@@ -34,8 +34,8 @@ internal static class RenderChecks
         var events = new HashSet<string> { "Click", "Checked", "Unchecked", "MouseLeftButtonDown", "SelectionChanged", "TextChanged", "ValueChanged", "PreviewMouseLeftButtonDown", "PreviewMouseLeftButtonUp", "KeyDown", "PreviewKeyDown" };
         foreach (var attribute in document.Descendants().Attributes().Where(a => events.Contains(a.Name.LocalName)).ToArray()) attribute.Remove();
         foreach (var host in document.Descendants().Where(e => e.Name.LocalName == "FlyleafHost").ToArray()) host.ReplaceWith(new XElement(wpf + "Grid", host.Attributes().Where(a => a.Name.LocalName != "Player")));
-        var window = (Window)XamlReader.Parse(document.ToString().Replace("clr-namespace:ReelGood", "clr-namespace:ReelGood;assembly=ReelGood"));
-        if (window.Title != "GlitchStich Studio" || !((Button)window.FindName("SaveProjectButton")).Content.ToString()!.Contains("Save stitch")) throw new Exception("GlitchStich identity or stitch controls did not load");
+        var window = (Window)XamlReader.Parse(document.ToString().Replace("clr-namespace:GlitchStich", "clr-namespace:GlitchStich;assembly=GlitchStich"));
+        if (window.Title != "GlitchStich Studio" || !((Button)window.FindName("SaveProjectButton")).Content.ToString()!.Contains("Save glitch")) throw new Exception("GlitchStich identity or stitch controls did not load");
         var body = (FrameworkElement)window.Content; window.Content = null;
         body.SetValue(TextElement.ForegroundProperty, window.Foreground);
         body.SetValue(TextElement.FontFamilyProperty, window.FontFamily);
@@ -57,7 +57,7 @@ internal static class RenderChecks
         {
             if (((Image)window.FindName(name)).Source is not BitmapSource bitmap || bitmap.PixelWidth < 16) throw new Exception("Brand image did not load: " + name);
         }
-        var icon = new IconBitmapDecoder(new Uri(Path.Combine(root, "Resources", "reelgood.ico")), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+        var icon = new IconBitmapDecoder(new Uri(Path.Combine(root, "Resources", "glitchstich.ico")), BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
         if (!new[] { 16, 32, 48, 256 }.All(size => icon.Frames.Any(frame => frame.PixelWidth == size))) throw new Exception("Windows icon is missing required small/large resolutions");
         Console.WriteLine("PASS Embedded app/Copilot images load; Windows icon contains transparent small/large frames");
         var startScan = (Button)window.FindName("StartScanButton");
@@ -83,7 +83,7 @@ internal static class RenderChecks
         RenderDraft(assembly, window, output);
         RenderCopilot(assembly, window, output);
         RenderEditing(assembly, window, output);
-        var splash = (Window)Activator.CreateInstance(assembly.GetType("ReelGood.SplashWindow", true)!)!;
+        var splash = (Window)Activator.CreateInstance(assembly.GetType("GlitchStich.SplashWindow", true)!)!;
         // Drive the exact startup storyboard without creating an audio device.
         var intro = (System.Windows.Media.Animation.Storyboard)splash.FindResource("Intro");
         intro.Begin(splash, true);
@@ -178,7 +178,7 @@ internal static class RenderChecks
         if (watch.Elapsed.TotalMilliseconds / 196 > 33) throw new Exception("Platformer pose exceeds the frame budget");
         Console.WriteLine("PASS Distant forward run; wall outside initial camera shot; obstacle cleared; one somersault followed by airborne corkscrew; upright landing and platform clearance");
         // Sound track must end with the ident, not leak into normal editor use.
-        using (var sound = assembly.GetManifestResourceStream("ReelGood.Audio.Intro.wav")!)
+        using (var sound = assembly.GetManifestResourceStream("GlitchStich.Audio.Intro.wav")!)
         using (var reader = new BinaryReader(sound))
         {
             reader.ReadBytes(22); var channels = reader.ReadInt16(); var rate = reader.ReadInt32();
@@ -223,8 +223,8 @@ internal static class RenderChecks
     }
     private static void RenderCopilot(Assembly assembly, Window owner, string output)
     {
-        var proposalType = assembly.GetType("ReelGood.CopilotProposal", true)!;
-        var footageType = assembly.GetType("ReelGood.CopilotFootageReview", true)!;
+        var proposalType = assembly.GetType("GlitchStich.CopilotProposal", true)!;
+        var footageType = assembly.GetType("GlitchStich.CopilotFootageReview", true)!;
         var empty = Array.CreateInstance(proposalType, 0);
         var media = Activator.CreateInstance(footageType, ["Reviewed a sampled source window with actual frames/audio.", empty])!;
         var task = typeof(Task).GetMethods().Single(method => method.Name == "FromResult").MakeGenericMethod(footageType).Invoke(null, [media])!;
@@ -233,7 +233,7 @@ internal static class RenderChecks
             System.Linq.Expressions.Expression.Parameter(typeof(string)), System.Linq.Expressions.Expression.Parameter(typeof(bool)), System.Linq.Expressions.Expression.Parameter(typeof(CancellationToken))).Compile();
         var applyDelegate = System.Linq.Expressions.Expression.Lambda(typeof(Func<,,>).MakeGenericType(proposalType, typeof(string), typeof(string)), System.Linq.Expressions.Expression.Constant("Applied test change"),
             System.Linq.Expressions.Expression.Parameter(proposalType), System.Linq.Expressions.Expression.Parameter(typeof(string))).Compile();
-        var windowType = assembly.GetType("ReelGood.CopilotWindow", true)!;
+        var windowType = assembly.GetType("GlitchStich.CopilotWindow", true)!;
         var copilot = (Window)Activator.CreateInstance(windowType, [owner, "http://localhost:11434", "qwen3:4b", true,
             (Func<bool, string>)(_ => "Test source, duration 60 seconds, bookmark 0 at 25 seconds."), (Action<string, string, bool>)((_, _, _) => { }), applyDelegate, reviewDelegate])!;
         var flags = BindingFlags.Instance | BindingFlags.NonPublic;
@@ -251,9 +251,9 @@ internal static class RenderChecks
     private static void RenderEditing(Assembly assembly, Window owner, string output)
     {
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
-        var snapshotType = assembly.GetType("ReelGood.EditingSnapshot", true)!;
+        var snapshotType = assembly.GetType("GlitchStich.EditingSnapshot", true)!;
         var initial = System.Text.Json.JsonSerializer.Deserialize("""{"Clips":[{"Start":0,"End":20,"Layer":0,"Effects":{"Speed":1}},{"Start":30,"End":40,"Layer":1,"Effects":{"Speed":1}}],"Assets":[],"Media":[]}""", snapshotType)!;
-        var type = assembly.GetType("ReelGood.EditingToolsWindow", true)!;
+        var type = assembly.GetType("GlitchStich.EditingToolsWindow", true)!;
         var constructor = type.GetConstructors().Single();
         var args = new List<object?> { owner, initial, 60d, 10d };
         foreach (var parameter in constructor.GetParameters().Skip(4))
@@ -274,9 +274,9 @@ internal static class RenderChecks
         Save(body, 900, 620, Path.Combine(output, "editing-clips-compact.png"));
         type.GetMethod("ShowPage", flags)!.Invoke(editor, [1]); Save(body, 1020, 790, Path.Combine(output, "editing-media.png"));
         type.GetMethod("ShowPage", flags)!.Invoke(editor, [2]); Save(body, 1020, 790, Path.Combine(output, "editing-ai.png"));
-        var connectionType = assembly.GetType("ReelGood.YouTubeConnection", true)!;
+        var connectionType = assembly.GetType("GlitchStich.YouTubeConnection", true)!;
         var connection = Activator.CreateInstance(connectionType, [Path.Combine(output, "youtube-fixture"), null])!;
-        var youtube = (Window)Activator.CreateInstance(assembly.GetType("ReelGood.YouTubeWindow", true)!, [owner, connection])!;
+        var youtube = (Window)Activator.CreateInstance(assembly.GetType("GlitchStich.YouTubeWindow", true)!, [owner, connection])!;
         var youtubeBody = (FrameworkElement)youtube.Content; youtubeBody.SetValue(TextElement.ForegroundProperty, youtube.Foreground);
         Save(youtubeBody, 660, 780, Path.Combine(output, "youtube-setup.png"));
         if (((CheckBox)youtube.GetType().GetField("_auto", flags)!.GetValue(youtube)!).IsChecked == true) throw new Exception("YouTube setup enabled automatic uploads by default");
@@ -284,15 +284,15 @@ internal static class RenderChecks
     }
     private static void RenderDraft(Assembly assembly, Window owner, string output)
     {
-        var bookmarkType = assembly.GetType("ReelGood.DraftBookmark", true)!;
+        var bookmarkType = assembly.GetType("GlitchStich.DraftBookmark", true)!;
         var bookmarks = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(bookmarkType))!;
         bookmarks.Add(Activator.CreateInstance(bookmarkType, [0, 10d, 17d, "Laughter / microphone", "Keep", false, false]));
         bookmarks.Add(Activator.CreateInstance(bookmarkType, [1, 14d, 20d, "Elimination / video", null, false, false]));
         bookmarks.Add(Activator.CreateInstance(bookmarkType, [2, 50d, 60d, "Group reaction", null, false, false]));
-        var clipType = assembly.GetType("ReelGood.DraftClip", true)!;
+        var clipType = assembly.GetType("GlitchStich.DraftClip", true)!;
         var parameter = System.Linq.Expressions.Expression.Parameter(clipType);
         var preview = System.Linq.Expressions.Expression.Lambda(typeof(Action<>).MakeGenericType(clipType), System.Linq.Expressions.Expression.Empty(), parameter).Compile();
-        var type = assembly.GetType("ReelGood.DraftEditWindow", true)!;
+        var type = assembly.GetType("GlitchStich.DraftEditWindow", true)!;
         new System.Windows.Interop.WindowInteropHelper(owner).EnsureHandle();
         var review = (Window)Activator.CreateInstance(type, [owner, bookmarks, 90d, preview, (Action)(() => { })])!;
         var readyCount = 0;
@@ -322,13 +322,13 @@ internal static class RenderChecks
         merge.Text = "2"; bookmarks.Clear();
         type.GetMethod("Rebuild", flags)!.Invoke(review, null);
         if (readyCount != completed) throw new Exception("An empty draft signaled completion");
-        var rangeType = assembly.GetType("ReelGood.EditorialRange", true)!;
+        var rangeType = assembly.GetType("GlitchStich.EditorialRange", true)!;
         var protectedRanges = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(rangeType))!;
         protectedRanges.Add(Activator.CreateInstance(rangeType, [20d, 35d, "Character dialogue"]));
         var quietRanges = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(rangeType))!;
         quietRanges.Add(Activator.CreateInstance(rangeType, [10d, 25d, "Reviewed inactive quiet footage"]));
-        var modeType = assembly.GetType("ReelGood.EditorialMode", true)!;
-        var contextType = assembly.GetType("ReelGood.DraftReviewContext", true)!;
+        var modeType = assembly.GetType("GlitchStich.EditorialMode", true)!;
+        var contextType = assembly.GetType("GlitchStich.DraftReviewContext", true)!;
         var editorial = Activator.CreateInstance(contextType, [Enum.Parse(modeType, "Story"), protectedRanges, quietRanges])!;
         type.GetMethod("ConfigureEditorialContext")!.Invoke(review, [editorial]);
         type.GetMethod("Rebuild", flags)!.Invoke(review, null);

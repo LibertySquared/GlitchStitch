@@ -2,7 +2,7 @@ param([string]$DesktopFolder = [Environment]::GetFolderPath('Desktop'))
 $ErrorActionPreference = 'Stop'
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $appPath = Join-Path $projectRoot 'portable-release\GlitchStich.exe'
-$iconPath = Join-Path $projectRoot 'portable-release\Resources\reelgood.ico'
+$iconPath = Join-Path $projectRoot 'portable-release\Resources\glitchstich.ico'
 if (-not (Test-Path -LiteralPath $appPath) -or -not (Test-Path -LiteralPath $iconPath)) { throw 'Install the updated app and icon before creating its desktop shortcut.' }
 $desktop = [IO.Path]::GetFullPath($DesktopFolder)
 if (-not (Test-Path -LiteralPath $desktop -PathType Container)) { throw "The desktop folder does not exist: $desktop" }

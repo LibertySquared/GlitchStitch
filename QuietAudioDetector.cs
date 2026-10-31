@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class QuietAudioDetector
 {

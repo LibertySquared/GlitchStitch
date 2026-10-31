@@ -1,7 +1,7 @@
 using System.IO;
 using System.Windows;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow
 {

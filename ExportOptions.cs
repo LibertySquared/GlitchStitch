@@ -1,4 +1,4 @@
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record ExportOptions(string Quality = "High", string Encoder = "libx264", int Threads = 2, bool MergeAudio = true, bool HardwareDecode = false, bool Intermediate = false)
 {

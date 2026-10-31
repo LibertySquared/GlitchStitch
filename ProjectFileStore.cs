@@ -1,10 +1,13 @@
 using System.IO;
 using System.Text;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class ProjectFileStore
 {
+    public const string Extension = ".glitch";
+    public static string DefaultProjectName(string source) => Path.GetFileNameWithoutExtension(source) + "_glitch" + Extension;
+    public static string DefaultExportName(string source) => Path.GetFileNameWithoutExtension(source) + "_stitch.mp4";
     public static void Write(string path, string json)
     {
         path = Path.GetFullPath(path);

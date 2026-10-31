@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using Microsoft.Win32;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed class YouTubeWindow : Window
 {

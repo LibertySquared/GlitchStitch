@@ -3,7 +3,7 @@ using System.IO;
 using NAudio.Wave;
 using NAudio.CoreAudioApi;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed class RecordingAudioSession
 {

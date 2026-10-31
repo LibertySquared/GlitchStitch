@@ -1,7 +1,7 @@
 using System.Reflection;
 using NAudio.Wave;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class NotificationSound
 {
@@ -14,7 +14,7 @@ internal static class NotificationSound
         {
             await Task.Run(async () =>
             {
-                using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ReelGood.Audio.DraftReady.wav");
+                using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GlitchStich.Audio.DraftReady.wav");
                 if (stream is null || cancellation.IsCancellationRequested) return;
                 using var wave = new WaveFileReader(stream);
                 using var output = new WaveOutEvent { DesiredLatency = 80 };

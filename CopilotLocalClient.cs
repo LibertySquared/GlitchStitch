@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class CopilotLocalClient
 {

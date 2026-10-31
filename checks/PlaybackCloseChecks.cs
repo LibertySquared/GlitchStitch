@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ReelGood;
+using GlitchStich;
 
 internal static class PlaybackCloseChecks
 {
@@ -29,9 +29,9 @@ internal static class PlaybackCloseChecks
 
     private static async Task Check()
     {
-        const string root = @"D:\Editor\ReelGood";
-        var folder = Path.Combine(root, ".reelgood-publish-staging");
-        if (!File.Exists(Path.Combine(folder, "ReelGood.dll"))) folder = Path.Combine(root, "portable-release");
+        const string root = @"D:\Editor\GlitchStich";
+        var folder = Path.Combine(root, ".glitchstich-publish-staging");
+        if (!File.Exists(Path.Combine(folder, "GlitchStich.dll"))) folder = Path.Combine(root, "portable-release");
         System.Runtime.Loader.AssemblyLoadContext.Default.Resolving += (_, name) => File.Exists(Path.Combine(folder, name.Name + ".dll")) ? Assembly.LoadFrom(Path.Combine(folder, name.Name + ".dll")) : null;
         var flyleaf = Assembly.LoadFrom(Path.Combine(folder, "FlyleafLib.dll"));
         var engineConfigType = flyleaf.GetType("FlyleafLib.EngineConfig", true)!;

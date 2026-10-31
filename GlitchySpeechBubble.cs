@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public sealed class GlitchySpeechBubble : Grid
 {

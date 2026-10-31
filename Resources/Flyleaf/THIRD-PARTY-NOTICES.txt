@@ -1,4 +1,4 @@
-ReelGood's source-monitor playback uses FlyleafLib 3.11.8 and the Flyleaf FFmpeg 9.0 Windows shared runtime.
+GlitchStich's source-monitor playback uses FlyleafLib 3.11.8 and the Flyleaf FFmpeg 9.0 Windows shared runtime.
 
 FlyleafLib is licensed under LGPL-3.0-or-later. Source and license:
 https://github.com/SuRGeoNix/Flyleaf

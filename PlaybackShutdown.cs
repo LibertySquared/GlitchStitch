@@ -1,4 +1,4 @@
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class PlaybackShutdown
 {

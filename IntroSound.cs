@@ -1,7 +1,7 @@
 using System.Reflection;
 using NAudio.Wave;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class IntroSound
 {
@@ -12,7 +12,7 @@ internal static class IntroSound
         {
             await Task.Run(async () =>
             {
-                using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ReelGood.Audio.Intro.wav");
+                using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("GlitchStich.Audio.Intro.wav");
                 if (stream is null || cancellation.IsCancellationRequested) return;
                 using var wave = new WaveFileReader(stream);
                 using var output = new WaveOutEvent { DesiredLatency = 80 };

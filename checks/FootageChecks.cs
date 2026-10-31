@@ -2,11 +2,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
-using ReelGood;
+using GlitchStich;
 
 internal static class FootageChecks
 {
-    private static readonly string Project = @"D:\Editor\ReelGood";
+    private static readonly string Project = @"D:\Editor\GlitchStich";
     private static string Ffmpeg => Path.Combine(Project, "tools", "ffmpeg.exe");
     private static string Probe => Path.Combine(Project, "tools", "ffprobe.exe");
     private static string N(double n) => n.ToString("0.######", CultureInfo.InvariantCulture);

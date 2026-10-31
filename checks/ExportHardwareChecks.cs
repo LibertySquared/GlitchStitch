@@ -2,13 +2,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
-using ReelGood;
+using GlitchStich;
 
 internal static class ExportHardwareChecks
 {
     public static void Run()
     {
-        const string root = @"D:\Editor\ReelGood";
+        const string root = @"D:\Editor\GlitchStich";
         var ffmpeg = Path.Combine(root, "tools", "ffmpeg.exe"); var probe = Path.Combine(root, "tools", "ffprobe.exe");
         string Execute(string tool, IEnumerable<string> args)
         {

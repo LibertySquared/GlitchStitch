@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record ExportSegment(double Start, double End)
 {

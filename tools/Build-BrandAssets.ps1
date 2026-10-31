@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$source = [Drawing.Bitmap]::new((Join-Path $projectRoot 'Resources\Brand\reelgood-app.png'))
+$source = [Drawing.Bitmap]::new((Join-Path $projectRoot 'Resources\Brand\glitchstich-app.png'))
 try {
     if ($source.GetPixel(0, 0).A -ne 0) { throw 'The generated app image must retain its transparent exterior.' }
     $sizes = @(16, 20, 24, 32, 40, 48, 64, 96, 128, 256)
@@ -19,7 +19,7 @@ try {
             $frames.Add($stream.ToArray())
         } finally { $stream.Dispose(); $graphics.Dispose(); $bitmap.Dispose() }
     }
-    $output = [IO.File]::Create((Join-Path $projectRoot 'Resources\reelgood.ico'))
+    $output = [IO.File]::Create((Join-Path $projectRoot 'Resources\glitchstich.ico'))
     $writer = [IO.BinaryWriter]::new($output)
     try {
         $writer.Write([uint16]0); $writer.Write([uint16]1); $writer.Write([uint16]$sizes.Count)
@@ -33,5 +33,5 @@ try {
         }
         foreach ($frame in $frames) { $writer.Write($frame) }
     } finally { $writer.Dispose(); $output.Dispose() }
-    Write-Output "Built ReelGood icon with $($sizes.Count) transparent resolutions (16–256 px)."
+    Write-Output "Built GlitchStich icon with $($sizes.Count) transparent resolutions (16–256 px)."
 } finally { $source.Dispose() }

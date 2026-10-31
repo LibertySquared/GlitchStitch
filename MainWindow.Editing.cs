@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow
 {
@@ -30,7 +30,7 @@ public partial class MainWindow
         _editHistory.Clear(); _historyCurrent = null; _editWaveformCache.Clear(); _sequencePlaybackIndex = -1;
         _selectedCue = null; _selectedVideoSegment = null; _selectedTimelineItem = null; _draftBackup = null; _videoLayerCount = 1;
         _durationSeconds = 1; _clipStartSeconds = 0; _clipEndSeconds = 1; _usingPreviewProxy = false; _pendingPreviewSeek = 0;
-        ProjectName.Text = "Untitled stitch"; MediaName.Text = "No media loaded"; MediaDetails.Text = "Add video, audio or image media.";
+        ProjectName.Text = "Untitled glitch"; MediaName.Text = "No media loaded"; MediaDetails.Text = "Add video, audio or image media.";
         PreferenceBox.Text = ""; GameTitleBox.Text = ""; GameModeBox.Text = ""; IRLModeCheck.IsChecked = false; EditModeBox.SelectedIndex = 0; SecondaryEditModeBox.SelectedIndex = 0;
         VideoPreviewHost.Visibility = Visibility.Collapsed; ImagePreview.Source = null; ImagePreview.Visibility = Visibility.Collapsed; PreviewEmpty.Visibility = Visibility.Visible;
         SeekSlider.Maximum = 1; SeekSlider.Value = 0; DurationText.Text = "00:00"; CurrentTime.Text = "00:00"; RemoveTimelineItemButton.IsEnabled = false;

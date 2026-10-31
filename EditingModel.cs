@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record ClipEffects(double Speed = 1, int Rotation = 0, double CropLeft = 0, double CropTop = 0,
     double CropRight = 0, double CropBottom = 0, double Volume = 1, double FadeIn = 0, double FadeOut = 0,

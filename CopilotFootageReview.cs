@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed record CopilotFootageReview(string Evidence, IReadOnlyList<CopilotProposal> Proposals);
 internal sealed record FootageVerdict(string Verdict, string Reason, string Observations, double? EventOffset, double? StartOffset, double? EndOffset)

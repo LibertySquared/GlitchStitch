@@ -1,8 +1,8 @@
 $ErrorActionPreference = 'Stop'
 $uri = 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip'
 $expected = '60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba'
-$zip = Join-Path $env:TEMP 'reelgood-ffmpeg-release-essentials.zip'
-$unpack = Join-Path $env:TEMP 'reelgood-ffmpeg-release-essentials'
+$zip = Join-Path $env:TEMP 'glitchstich-ffmpeg-release-essentials.zip'
+$unpack = Join-Path $env:TEMP 'glitchstich-ffmpeg-release-essentials'
 Invoke-WebRequest -Uri $uri -OutFile $zip
 $actual = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
 if ($actual -ne $expected) { Remove-Item -LiteralPath $zip -Force; throw "FFmpeg archive checksum mismatch. Expected $expected; got $actual." }

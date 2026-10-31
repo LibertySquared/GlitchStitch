@@ -8,7 +8,7 @@ $staging = [IO.Path]::GetFullPath((Join-Path $projectRoot ".build-profile\flylea
 $expectedStaging = Join-Path $projectRoot ".build-profile\flyleaf-runtime-staging"
 
 if ($destination -ne $expectedDestination -or $staging -ne $expectedStaging) {
-    throw "A Flyleaf runtime path resolved outside the ReelGood project. No files were changed."
+    throw "A Flyleaf runtime path resolved outside the GlitchStich project. No files were changed."
 }
 
 $requiredFiles = @(
@@ -42,7 +42,7 @@ try {
     else {
         $resolvedLocalArchive = [IO.Path]::GetFullPath((Join-Path (Get-Location) $LocalArchive))
         if (-not $resolvedLocalArchive.StartsWith($projectRoot.TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) {
-            throw "A provided Flyleaf archive must be inside the ReelGood project folder."
+            throw "A provided Flyleaf archive must be inside the GlitchStich project folder."
         }
         if (-not (Test-Path -LiteralPath $resolvedLocalArchive -PathType Leaf)) {
             throw "The provided Flyleaf archive was not found: $resolvedLocalArchive"

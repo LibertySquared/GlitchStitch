@@ -29,18 +29,18 @@ internal static class WindowCloseChecks
 
     private static async Task Check(Application app, bool media, bool sync)
     {
-        const string root = @"D:\Editor\ReelGood";
-        var folder = Environment.GetEnvironmentVariable("GLITCHSTICH_CHECK_PACKAGE") ?? new[] { Path.Combine(root, "bin", "Release", "net9.0-windows", "win-x64"), Path.Combine(root, ".reelgood-publish-staging"), Path.Combine(root, "portable-release") }
-            .First(path => File.Exists(Path.Combine(path, "ReelGood.dll")));
+        const string root = @"D:\Editor\GlitchStich";
+        var folder = Environment.GetEnvironmentVariable("GLITCHSTICH_CHECK_PACKAGE") ?? new[] { Path.Combine(root, "bin", "Release", "net9.0-windows", "win-x64"), Path.Combine(root, ".glitchstich-publish-staging"), Path.Combine(root, "portable-release") }
+            .First(path => File.Exists(Path.Combine(path, "GlitchStich.dll")));
         System.Runtime.Loader.AssemblyLoadContext.Default.Resolving += (_, name) => File.Exists(Path.Combine(folder, name.Name + ".dll")) ? Assembly.LoadFrom(Path.Combine(folder, name.Name + ".dll")) : null;
-        var assembly = Assembly.LoadFrom(Path.Combine(folder, "ReelGood.dll"));
-        app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText(Path.Combine(root, "CyberTheme.xaml")).Replace("clr-namespace:ReelGood", "clr-namespace:ReelGood;assembly=ReelGood")));
+        var assembly = Assembly.LoadFrom(Path.Combine(folder, "GlitchStich.dll"));
+        app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText(Path.Combine(root, "CyberTheme.xaml")).Replace("clr-namespace:GlitchStich", "clr-namespace:GlitchStich;assembly=GlitchStich")));
         var flyleaf = Assembly.LoadFrom(Path.Combine(folder, "FlyleafLib.dll"));
         var configType = flyleaf.GetType("FlyleafLib.EngineConfig", true)!; var config = Activator.CreateInstance(configType)!;
         configType.GetProperty("FFmpegPath")!.SetValue(config, Path.Combine(folder, "Resources", "Flyleaf", "FFmpeg"));
         configType.GetProperty("UIRefresh")!.SetValue(config, false);
         flyleaf.GetType("FlyleafLib.Engine", true)!.GetMethod("Start", [configType])!.Invoke(null, [config]);
-        var type = assembly.GetType("ReelGood.MainWindow", true)!;
+        var type = assembly.GetType("GlitchStich.MainWindow", true)!;
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
         var data = Path.Combine(root, "checks", "results", media ? "media-placement" : sync ? "preview-sync" : "window-close"); Directory.CreateDirectory(Path.Combine(data, "tools"));
         // Isolate tool setup from real app data; remove these fixture copies after checking.
@@ -120,9 +120,9 @@ internal static class WindowCloseChecks
         File.WriteAllText(Path.Combine(data, "media-source-review.json"), System.Text.Json.JsonSerializer.Serialize(review, review.GetType(), new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
         type.GetField("_lastFootageReview", flags)!.SetValue(editor, "Source 18–30 seconds: " + review.GetType().GetProperty("Display")!.GetValue(review));
         var ranges = (System.Collections.IList)type.GetField("_reviewedSourceRanges", flags)!.GetValue(editor)!;
-        ranges.Add(Activator.CreateInstance(assembly.GetType("ReelGood.EditorialRange", true)!, [18d, 30d, "Actual sampled production review"]));
+        ranges.Add(Activator.CreateInstance(assembly.GetType("GlitchStich.EditorialRange", true)!, [18d, 30d, "Actual sampled production review"]));
         var cues = (System.Collections.IList)type.GetField("_cues", flags)!.GetValue(editor)!;
-        var cueType = assembly.GetType("ReelGood.MainWindow+CueItem", true)!;
+        var cueType = assembly.GetType("GlitchStich.MainWindow+CueItem", true)!;
         var cue = Activator.CreateInstance(cueType, [21d, "Manual highlight test candidate", "Manual", 24d, 0d, 0d, 28d])!;
         cueType.GetProperty("Decision")!.SetValue(cue, "Keep"); cues.Add(cue);
         var assetPath = Path.Combine(data, "test-celebration.png");
@@ -134,7 +134,7 @@ internal static class WindowCloseChecks
         var bitmap = new System.Windows.Media.Imaging.RenderTargetBitmap(400, 120, 96, 96, PixelFormats.Pbgra32); bitmap.Render(visual);
         var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder(); encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap)); using (var stream = File.Create(assetPath)) encoder.Save(stream);
         var json = System.Text.Json.JsonSerializer.Serialize(new { Clips = new[] { new { Start = 18, End = 30, Layer = 0, Effects = new { Speed = 1 } } }, Assets = new[] { new { Id = "celebration", Path = assetPath, Kind = "Image", Description = "Short CLUTCH celebration after the user's kept highlight; place in a corner without blocking the action", AllowAi = true, HasAudio = false, Duration = 0 } }, Media = Array.Empty<object>() });
-        var edit = System.Text.Json.JsonSerializer.Deserialize(json, assembly.GetType("ReelGood.EditingSnapshot", true)!)!;
+        var edit = System.Text.Json.JsonSerializer.Deserialize(json, assembly.GetType("GlitchStich.EditingSnapshot", true)!)!;
         var task = (Task)type.GetMethod("SuggestMediaPlacementsAsync", flags)!.Invoke(editor, [edit, "Suggest a brief 1–2 second small celebration for my kept highlight at source 24s. Use only reviewed source 18–30s; avoid masking gameplay.", cancellation.Token])!;
         try { await task; }
         finally { File.WriteAllText(Path.Combine(data, "media-placement-response.json"), (string?)type.GetField("_lastMediaPlacementResponse", flags)!.GetValue(editor) ?? "No response"); }

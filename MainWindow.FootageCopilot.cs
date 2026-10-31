@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow
 {

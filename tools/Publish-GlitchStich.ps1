@@ -3,22 +3,21 @@ $ErrorActionPreference = "Stop"
 
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $publishDirectory = [IO.Path]::GetFullPath((Join-Path $projectRoot "portable-release"))
-$stagingDirectory = [IO.Path]::GetFullPath((Join-Path $projectRoot ".reelgood-publish-staging"))
+$stagingDirectory = [IO.Path]::GetFullPath((Join-Path $projectRoot ".glitchstich-publish-staging"))
 $buildDirectory = [IO.Path]::GetFullPath((Join-Path $projectRoot "bin"))
 $expectedPublish = Join-Path $projectRoot "portable-release"
-$expectedStaging = Join-Path $projectRoot ".reelgood-publish-staging"
+$expectedStaging = Join-Path $projectRoot ".glitchstich-publish-staging"
 $expectedBuild = Join-Path $projectRoot "bin"
 
 if ($publishDirectory -ne $expectedPublish -or $stagingDirectory -ne $expectedStaging -or $buildDirectory -ne $expectedBuild) {
-    throw "A generated app folder resolved outside the ReelGood project. No files were changed."
+    throw "A generated app folder resolved outside the GlitchStich project. No files were changed."
 }
-if (-not $PrepareOnly -and (Get-Process -Name ReelGood,GlitchStich -ErrorAction SilentlyContinue)) {
-    throw "Close GlitchStich (or the previous ReelGood build) before publishing an update."
+if (-not $PrepareOnly -and (Get-Process -Name GlitchStich,ReelGood -ErrorAction SilentlyContinue)) {
+    throw "Close GlitchStich before publishing an update."
 }
 
 New-Item -ItemType Directory -Force -Path $publishDirectory | Out-Null
-$dataDirectory = Join-Path $publishDirectory "ReelGoodData"
-New-Item -ItemType Directory -Force -Path $dataDirectory | Out-Null
+# User data is migrated by the app; do not pre-create an empty competing folder.
 
 $preserveStaging = $InstallPrepared.IsPresent
 try {
@@ -43,37 +42,32 @@ try {
         } catch { $hasWinX64Assets = $false }
     }
     if (-not $hasWinX64Assets) {
-        dotnet restore (Join-Path $projectRoot "ReelGood.csproj") `
+        dotnet restore (Join-Path $projectRoot "GlitchStich.csproj") `
             -r win-x64 `
             --configfile (Join-Path $projectRoot "NuGet.Config") `
             --ignore-failed-sources -p:NuGetAudit=false
-        if ($LASTEXITCODE -ne 0) { throw "ReelGood dependency restore failed with exit code $LASTEXITCODE." }
+        if ($LASTEXITCODE -ne 0) { throw "GlitchStich dependency restore failed with exit code $LASTEXITCODE." }
     }
-    dotnet publish (Join-Path $projectRoot "ReelGood.csproj") `
+    dotnet publish (Join-Path $projectRoot "GlitchStich.csproj") `
         -c Release -r win-x64 --self-contained false --no-restore `
         -p:PublishSingleFile=false -p:PublishTrimmed=false `
         -o $stagingDirectory
-    if ($LASTEXITCODE -ne 0) { throw "ReelGood publish failed with exit code $LASTEXITCODE." }
+    if ($LASTEXITCODE -ne 0) { throw "GlitchStich publish failed with exit code $LASTEXITCODE." }
 
     }
     $preserveStaging = $true
-    # Keep managed assembly/resource identities stable so saved projects and
-    # embedded playback/model assets remain compatible. Rename only the apphost.
+    # The apphost, managed assembly and embedded resources now share one identity.
     $stagedExecutable = Join-Path $stagingDirectory "GlitchStich.exe"
-    $legacyAppHost = Join-Path $stagingDirectory "ReelGood.exe"
-    if (-not (Test-Path -LiteralPath $stagedExecutable) -and (Test-Path -LiteralPath $legacyAppHost)) {
-        Move-Item -LiteralPath $legacyAppHost -Destination $stagedExecutable
-    }
     if (-not (Test-Path -LiteralPath $stagedExecutable)) { throw "The publish output did not contain GlitchStich.exe." }
 
-    if ($PrepareOnly) { Write-Output "Prepared update: $stagingDirectory. Close ReelGood, then run this script with -InstallPrepared."; return }
+    if ($PrepareOnly) { Write-Output "Prepared update: $stagingDirectory. Close GlitchStich, then run this script with -InstallPrepared."; return }
     # Check the actual app files as well as the process list: isolated build sessions
     # may not see a desktop process, but Windows still enforces its file locks.
-    foreach ($name in @("GlitchStich.exe", "ReelGood.exe", "ReelGood.dll")) {
+    foreach ($name in @("GlitchStich.exe", "GlitchStich.dll", "ReelGood.exe", "ReelGood.dll")) {
         $target = Join-Path $publishDirectory $name
         if (Test-Path -LiteralPath $target) {
             try { $handle = [IO.File]::Open($target, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None); $handle.Dispose() }
-            catch { throw "Close ReelGood before installing. The prepared update was retained; no app package files were replaced." }
+            catch { throw "Close GlitchStich before installing. The prepared update was retained; no app package files were replaced." }
         }
     }
     # Preserve user data; do not rewrite identical runtime files.
@@ -90,7 +84,7 @@ try {
     $installedHash = (Get-FileHash -LiteralPath (Join-Path $publishDirectory "GlitchStich.exe") -Algorithm SHA256).Hash
     if ($publishedHash -ne $installedHash) { throw "The installed EXE does not match the published EXE." }
 
-    foreach ($packageFile in @("ReelGood.dll", "NAudio.Core.dll", "NAudio.Wasapi.dll")) {
+    foreach ($packageFile in @("GlitchStich.dll", "NAudio.Core.dll", "NAudio.Wasapi.dll")) {
         $stagedFile = Join-Path $stagingDirectory $packageFile
         $installedFile = Join-Path $publishDirectory $packageFile
         if (-not (Test-Path -LiteralPath $stagedFile)) { throw "Required package file is missing: $packageFile" }
@@ -100,8 +94,10 @@ try {
         }
     }
 
-    $legacyInstalledHost = Join-Path $publishDirectory 'ReelGood.exe'
-    if (Test-Path -LiteralPath $legacyInstalledHost) { Remove-Item -LiteralPath $legacyInstalledHost -Force }
+    foreach ($legacyName in @('ReelGood.exe', 'ReelGood.dll', 'ReelGood.pdb', 'ReelGood.deps.json', 'ReelGood.runtimeconfig.json', 'Resources\reelgood.ico')) {
+        $legacyFile = Join-Path $publishDirectory $legacyName
+        if (Test-Path -LiteralPath $legacyFile) { Remove-Item -LiteralPath $legacyFile -Force }
+    }
     $preserveStaging = $false
     Write-Output "Updated app: $(Join-Path $publishDirectory 'GlitchStich.exe')"
     Write-Output "SHA-256: $installedHash"

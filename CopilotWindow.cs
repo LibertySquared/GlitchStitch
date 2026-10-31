@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed class CopilotWindow : Window
 {

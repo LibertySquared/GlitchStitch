@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal static class CyberDialog
 {

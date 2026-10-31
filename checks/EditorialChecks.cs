@@ -1,6 +1,6 @@
 using System.IO;
 using System.Text;
-using ReelGood;
+using GlitchStich;
 
 internal static class EditorialChecks
 {
@@ -31,7 +31,7 @@ internal static class EditorialChecks
         if (invalid.RemovedQuietSeconds != 0) throw new Exception("Invalid quiet cut was applied");
         Console.WriteLine("PASS Story retains unreviewed footage; cutscenes/dialogue and explicit Keeps protect ranges; highlights retain identified context; quiet cleanup can be disabled");
 
-        var folder = @"D:\Editor\ReelGood\checks\results\editorial"; Directory.CreateDirectory(folder);
+        var folder = @"D:\Editor\GlitchStich\checks\results\editorial"; Directory.CreateDirectory(folder);
         var silent = Path.Combine(folder, "quiet.wav"); var speech = Path.Combine(folder, "voice-activity.wav");
         void Wave(string path, bool activity)
         {

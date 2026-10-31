@@ -7,7 +7,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shell;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 internal sealed class DraftEditWindow : Window
 {

@@ -1,4 +1,4 @@
-namespace ReelGood;
+namespace GlitchStich;
 
 internal enum EditorialMode { Story, Highlights, Comedy }
 internal sealed record EditorialRange(double Start, double End, string Reason);

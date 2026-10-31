@@ -8,7 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public sealed class GlitchyCompanion : Grid
 {

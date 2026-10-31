@@ -1,15 +1,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
-using ReelGood;
+using GlitchStich;
 
 internal static class EditingChecks
 {
     public static void Run()
     {
-        const string ffmpeg = @"D:\Editor\ReelGood\tools\ffmpeg.exe";
-        const string ffprobe = @"D:\Editor\ReelGood\tools\ffprobe.exe";
-        const string folder = @"D:\Editor\ReelGood\checks\results\editing"; Directory.CreateDirectory(folder);
+        const string ffmpeg = @"D:\Editor\GlitchStich\tools\ffmpeg.exe";
+        const string ffprobe = @"D:\Editor\GlitchStich\tools\ffprobe.exe";
+        const string folder = @"D:\Editor\GlitchStich\checks\results\editing"; Directory.CreateDirectory(folder);
         byte[] Execute(string executable, IEnumerable<string> args)
         {
             var info = new ProcessStartInfo(executable) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };

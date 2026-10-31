@@ -3,7 +3,7 @@
 **/obj/
 /checks/results/
 release/
-.reelgood-publish-staging/
+.glitchstich-publish-staging/
 portable-release/
 .release-work/
 release-assets/
@@ -37,8 +37,10 @@ dotnet-home/
 
 # WPF temporary build projects and local application state.
 *_wpftmp.csproj
-**/ReelGoodData/
 **/GlitchStichData/
+**/ReelGoodData/
+*.glitch
+*.glitch.bak
 *.glitchstich
 *.glitchstich.bak
 *.reelgood

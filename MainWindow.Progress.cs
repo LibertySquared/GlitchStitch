@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Threading;
 
-namespace ReelGood;
+namespace GlitchStich;
 
 public partial class MainWindow
 {
