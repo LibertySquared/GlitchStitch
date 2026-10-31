@@ -1,4 +1,4 @@
-param([string]$Version = '0.1.0-beta.2')
+param([string]$Version = '0.1.0-beta.1')
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?$') { throw 'Use a semantic release version.' }
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -71,6 +71,8 @@ The MIT LICENSE applies to this project's original source.
     $verify = Join-Path $work 'verify'
     [IO.Compression.ZipFile]::ExtractToDirectory($zip, $verify)
     $extracted = Join-Path $verify 'GlitchStich'
+    $embeddedVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $extracted 'GlitchStich.dll')).ProductVersion
+    if ($embeddedVersion -ne $Version -and -not $embeddedVersion.StartsWith($Version + '+', [StringComparison]::Ordinal)) { throw "Embedded app version differs from release version: $embeddedVersion" }
     if ((Get-FileHash (Join-Path $package 'GlitchStich.dll')).Hash -ne (Get-FileHash (Join-Path $extracted 'GlitchStich.dll')).Hash) { throw 'ZIP round-trip changed the app assembly.' }
     $check = Start-Process -FilePath (Join-Path $extracted 'GlitchStich.exe') -ArgumentList '--verify-package' -WindowStyle Hidden -Wait -PassThru
     if ($check.ExitCode -ne 0) { throw 'Extracted release package failed verification.' }

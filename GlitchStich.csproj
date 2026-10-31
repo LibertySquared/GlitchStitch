@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
     <PublishSingleFile>false</PublishSingleFile>
     <AssemblyName>GlitchStich</AssemblyName>
+    <Version>0.1.0-beta.1</Version>
     <Product>GlitchStich</Product>
     <AssemblyTitle>GlitchStich</AssemblyTitle>
     <Description>GlitchStich automatic video editor — glitches into stitches</Description>
